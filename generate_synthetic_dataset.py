@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 CONFIG = {
     "graph_sizes": [50, 100, 200],
-    "graphs_per_size": {50: 3, 100: 3, 200: 3},
+    "graphs_per_size": {50: 300, 100: 200, 200: 150},
     "avg_degree_range": (3, 12),
     "random_seed": 42,
     "output_dir": "synthetic-graphs",
