@@ -22,8 +22,7 @@ The `redundancy-prediction.ipynb` notebook is organized as follows:
 3. **Redundancy Scorer Implementation**: Spectral approximation using heat equation
 4. **Synthetic Dataset Creation**: Graph generation and redundancy computation
 5. **Dataset Exploration**: Statistical analysis and feature correlations
-6. **Model Training**: Training loop for all four GNN variants
-7. **Results & Comparison**: Performance metrics and visualizations
+6. **Model Training**: Training loop for all four GNN variants and performance metrics and visualizations
 
 ### About the Models
 
