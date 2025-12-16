@@ -1,12 +1,10 @@
 # Synthetic Graph Dataset for Redundancy Prediction
 
-This directory contains a synthetic dataset of graphs with edge-level redundancy scores, designed for training Graph Neural Networks (GNNs) to predict structural and topological redundancy. The dataset models failure sensitivity in networked systems such as supply chains, logistics networks, and infrastructure graphs.
-
-Redundancy is defined as the marginal impact of removing an edge on diffusion dynamics originating from designated source nodes.
+This directory contains a synthetic dataset of graphs with edge-level redundancy scores,. In creating the dataset, we tried to make it so that they model different types of failure sensitivity in networked systems such as supply chains, logistics networks, etc.
 
 ---
 
-## Dataset Overview
+## Graph Generation Specs
 
 ### Graph Sizes
 
@@ -28,45 +26,41 @@ Total graphs: 39
 
 Each graph is generated independently with randomized parameters.
 
----
-
 ## Graph Generator Families
 
 Each graph is sampled from one of five generator families to ensure diversity in structure, redundancy patterns, and failure modes.
 
-### 1. Erdős–Rényi (ER)
+#### 1. Erdős–Rényi (ER)
 
 - Generator: `networkx.erdos_renyi_graph`
 - Structure: Random connectivity, low clustering
 - Redundancy profile: Minimal inherent redundancy, mostly uniform
 
-### 2. Barabási–Albert (BA)
+#### 2. Barabási–Albert (BA)
 
 - Generator: `networkx.barabasi_albert_graph`
 - Structure: Scale-free degree distribution with hubs
 - Redundancy profile: High vulnerability at hub-adjacent edges
 
-### 3. Stochastic Block Model (SBM)
+#### 3. Stochastic Block Model (SBM)
 
 - Generator: `networkx.stochastic_block_model`
 - Structure: Community-based with dense intra-block connections
 - Redundancy profile: Redundant edges within communities, fragile inter-block links
 
-### 4. Random Geometric Graph (RGG)
+#### 4. Random Geometric Graph (RGG)
 
 - Generator: `networkx.random_geometric_graph`
 - Structure: Spatial proximity graph with many short cycles
 - Redundancy profile: Strong topological redundancy via local loops
 
-### 5. Hybrid Tree + Shortcuts
+#### 5. Hybrid Tree + Shortcuts
 
 - Generator: Custom
 - Structure: Random tree backbone with added shortcut edges
 - Redundancy profile: Clear contrast between bridge edges and redundant shortcuts
 
----
-
-## Graph Post-Processing
+### Graph Post-Processing
 
 All generated graphs undergo the following steps:
 
@@ -84,85 +78,20 @@ Graphs that shrink to fewer than 80% of the target node count after connectivity
 
 ---
 
-## Source Node Selection
-
-Each graph has a small set of source nodes:
-
-- Number of sources: randomly chosen between 1 and 3  
-- Selection: uniform random sampling from nodes  
-- Purpose: sources act as diffusion origins for redundancy computation  
-
-Source information is used during label computation but is not directly used as a training label.
-
----
-
-## Redundancy Score Definition
-
-Redundancy is computed per edge using a diffusion-based delay metric.
-
-For an edge set X (typically a single edge):
-
-R(X) = Σᵥ∈V_reachable (t_{G \ X}(v) − t_G(v)) + λ · |V_unreachable|
-
-Where:
-
-- t_G(v): arrival time of node v under diffusion on the original graph  
-- t_{G \ X}(v): arrival time after removing edges in X  
-- λ: penalty for unreachable nodes (default: 1000.0)  
-
-Interpretation:
-
-- Low R(e): critical edge, removal causes large disruption  
-- High R(e): redundant edge, removal has little effect  
-
-Each edge is evaluated independently.
-
----
-
-## Redundancy Computation Parameters
-
-Diffusion is approximated using a truncated spectral method.
-
-Default parameters:
-
-- k_eig: 20  
-- tau: 0.1  
-- T_max: 10.0  
-- dt: 0.01  
-- lambda_penalty: 1000.0  
-
-Edges producing NaNs or numerical errors are discarded.
-
----
-
-## Node Features
+## Node and Edge Features
 
 Each node has a feature vector of length 3:
 
 1. Degree  
-2. Local clustering coefficient  
-3. Source indicator (1 if source, 0 otherwise)  
-
-Shape: `[num_nodes, 3]`
-
-Only local structural information is included.
-
----
-
-## Edge Features
+2. Local clustering coefficient 
+3. Source indicator (1 if source, 0 otherwise). Each graph was generated to have 1-3 random source nodes that act as diffusion origins for redundancy computation.
 
 Each edge has a feature vector of length 2:
 
 1. Edge weight  
 2. Bridge indicator (1 if the edge is a bridge in the graph)  
 
-Shape: `[num_edges, 2]`
-
-These features are structural and do not encode redundancy directly.
-
 ---
-
-## PyTorch Geometric Format
 
 Each graph is stored as a `torch_geometric.data.Data` object with:
 
@@ -176,18 +105,6 @@ Additional attributes:
 - generator: string identifier of the graph generator  
 
 Edge ordering in `edge_index`, `edge_attr`, and `y` is consistent.
-
----
-
-## Dataset Splits
-
-Graphs are split at the graph level:
-
-- Train: 70%  
-- Validation: 15%  
-- Test: 15%  
-
-Each split contains a mix of all generator families.
 
 ---
 
