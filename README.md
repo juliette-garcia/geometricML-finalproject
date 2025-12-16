@@ -1,4 +1,4 @@
-# Learning Redundancy in Supply Chain Networks
+# Predicting Route Redundancy in Supply Chain Networks via Structural and Topological Inductive Biases
 
 This repository contains an analysis of edge-level redundancy prediction in faux supply chain networks using Graph Neural Networks (GNNs). The project compares the effectiveness of structural metrics, topological metrics, and their combination for predicting real redundancy in networked systems.
 
