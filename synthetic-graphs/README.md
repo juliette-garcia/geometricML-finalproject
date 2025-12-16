@@ -26,7 +26,7 @@ Total graphs: 39
 
 Each graph is generated independently with randomized parameters.
 
-## Graph Generator Families
+### Graph Generator Families
 
 Each graph is sampled from one of five generator families to ensure diversity in structure, redundancy patterns, and failure modes.
 
@@ -92,6 +92,8 @@ Each edge has a feature vector of length 2:
 2. Bridge indicator (1 if the edge is a bridge in the graph)  
 
 ---
+
+## The Database
 
 Each graph is stored as a `torch_geometric.data.Data` object with:
 
